@@ -1,43 +1,58 @@
-﻿const customNameEl=document.getElementById("customname");
-const usEl = document.getElementById("us");
-const ukEl = document.getElementById("uk");
-const generateBtn = document.getElementById("generate");
-const storyEl = document.getElementById("story-field");
+﻿const customNameElement = document.getElementById("customname");
+const usRadioButton = document.getElementById("us");
+const ukRadioButton = document.getElementById("uk");
+const generateButton = document.getElementById("generate");
+const storyField = document.getElementById("story-field");
 
-const insertX = ["Willy the Goblin","Big Daddy","Father Christmas"];
-const insertY = ["the soup kitchen","Disneyland","the White House"];
-const insertZ = ["spontaneously combusted","melted into a puddle on the sidewalk","turned into a slug and crawled away"];
+const characterNames = ["Willy the Goblin", "Big Daddy", "Father Christmas"];
+const locations = ["the soup kitchen", "Disneyland", "the White House"];
+const situations = ["spontaneously combusted", "melted into a puddle on the sidewalk", "turned into a slug and crawled away"];
 
+const US_WEIGHT = 300;
+const US_TEMPERATURE = 94;
+const UK_WEIGHT = 1;
+const UK_TEMPERATURE = 9;
 
-generateBtn.addEventListener("click", () => {
-
-    if(customNameEl.value !== '') {
-        const name = customNameEl.value;
-    }
-
-    let weight = 300;
-    let temperature = 94;
-
-    if(ukEl.checked) {
-        weight = 1; 
-        temperature = 9; 
-    }  
-
-    storyEl.style.visibility = "visible";
-
-    let xItem = randomValueFromArray(insertX);
-    let yItem = randomValueFromArray(insertY);
-    let zItem = randomValueFromArray(insertZ);
-
-    let newStory = `It was ${temperature} fahrenheit outside, so ${xItem} went for a walk. When they got to ${yItem}, they stared in horror for a few moments, then ${zItem}. ${customNameEl.value} saw the whole thing, but was not surprised — ${xItem} weighs ${weight} pounds, and it was a hot day.`;
-
-    storyEl.textContent = newStory;
+generateButton.addEventListener("click", () => {
+    handleClick();
 })
+
+function handleClick(){
+    let customName = chooseName(customNameElement.value);    
+    let weight = chooseWeight();
+    let temperature = chooseTemperature();
+
+    storyField.style.visibility = "visible";
+    storyField.textContent = generateStory(customName, weight, temperature);
+}
+
+function generateStory(customName, weight, temperature) {
+    const characterName = randomValueFromArray(characterNames);
+    const location = randomValueFromArray(locations);
+    const situation = randomValueFromArray(situations);
+
+    return `It was ${temperature} fahrenheit outside, so ${characterName} went for a walk. When they got to ${location}, they stared in horror for a few moments, then ${situation}. ${customName} saw the whole thing, but was not surprised — ${characterName} weighs ${weight} pounds, and it was a hot day.`;
+}
 
 function randomValueFromArray(arrayToSelectFrom) {
     const randomNumber = Math.floor(Math.random() * 2);
-    
-    const selectedElement = arrayToSelectFrom[randomNumber];
-    
-    return selectedElement;
+    return arrayToSelectFrom[randomNumber];
+}
+
+function chooseWeight() {
+    if (ukRadioButton.checked) return UK_WEIGHT;
+    return US_WEIGHT;
+}
+
+function chooseTemperature() {
+    if (ukRadioButton.checked) return UK_TEMPERATURE;
+    return US_TEMPERATURE;
+}
+
+function chooseName(customNameElementValue) {
+    if(customNameElementValue !== ""){
+        return customNameElementValue;
+    }
+
+    return "Bob";
 }
